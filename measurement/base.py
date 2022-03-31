@@ -26,6 +26,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+from copy import deepcopy
 from decimal import Decimal
 
 import sympy
@@ -512,6 +513,13 @@ class BidimensionalMeasure(object):
         reference_chg = reference_units[r2]/reference_units[r1]
 
         return self.primary.value / primary_chg * reference_chg
+
+    def __deepcopy__(self, memo):
+        cls = self.__class__
+        result = cls.__new__(cls)
+        memo[id(self)] = result
+        result.primary = deepcopy(self.primary)
+        result.reference = deepcopy(self.reference)
 
     def __repr__(self):
         return '%s(%s__%s=%s)' % (
